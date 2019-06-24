@@ -11,15 +11,15 @@ public class HookHelper {
     public static void hookActivityManager() {
         try {
 
-            Object gDefault = Reflnvoke.getStaticFieldObject("android.app.ActivityManagerNative", "gDefault");
+            Object gDefault = RefInvoke.getStaticFieldObject("android.app.ActivityManagerNative", "gDefault");
 
-            Object rawIActivityManager = Reflnvoke.getFieldObject("android.util.Singleton", gDefault, "mInstance");
+            Object rawIActivityManager = RefInvoke.getFieldObject("android.util.Singleton", gDefault, "mInstance");
 
             Class<?> iActivityManagerInterface = Class.forName("android.app.IActivityManager");
 
             Object proxy = Proxy.newProxyInstance(Thread.currentThread().getContextClassLoader(), new Class[]{iActivityManagerInterface}, new HookHandler(rawIActivityManager));
 
-            Reflnvoke.setFieldObject("android.util.Singleton", gDefault, "mInstance", proxy);
+            RefInvoke.setFieldObject("android.util.Singleton", gDefault, "mInstance", proxy);
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Hook Failed", e);
